@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=glsl
+Type=Service
+Icon=image-jpeg
+ServiceTypes=Plasma/Wallpaper
+ 
+X-KDE-Library=glsl
+X-KDE-PluginInfo-Author=drich
+X-KDE-PluginInfo-Email=my@email.com
+X-KDE-PluginInfo-Name=glsl
+X-KDE-PluginInfo-Version=0.1
+X-KDE-PluginInfo-Website=
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true 
