@@ -12,7 +12,9 @@ set(glsl_SRCS
 	Wallpaper.cpp
 	GLWidget.cpp
 )
- 
+
+kde4_add_ui_files(glsl_SRCS config.ui)
+
 kde4_add_plugin(glsl ${glsl_SRCS})
 target_link_libraries(glsl ${KDE4_PLASMA_LIBS} QtOpenGL ge_qt)
  

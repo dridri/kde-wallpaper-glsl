@@ -1,8 +1,9 @@
 #version 130
 #define NO_DEFAULT_INCLUDE
 
-uniform vec2 resolution;
 uniform float time;
+uniform vec2 resolution;
+uniform vec3 effectColor;
 
 vec4 LFSR_Rand_Gen_4f(vec4 n){
   return (mod(n * mod(n*n*15731.0+789221.0, 2147483647.0) + 1376312589.0, 2147483647.0));
@@ -62,7 +63,7 @@ float RNoise3(vec3 v, int terms){
 		r = exp(r * 1.1) - 1.0;
 		result += r * amp * prev;
 		prev = r;
-		v *= 3.0;
+		v *= 2.0;
 	//	amp *= 0.5;
 		amp *= 1.0;
 		maxAmp += amp * 2.0;
@@ -74,30 +75,33 @@ float band(vec2 uv, float ftime1, float ftime2)
 {
 	float value = (exp((uv.x - 0.5) * (10.0 * sin(time * ftime1)) + 0.25 * cos(time * ftime2)) - 1.0) * 5 - 10.0 * uv.y;
 //	return clamp(0.1 * min(1.0, exp(value * 1.0) - 1.0), 0.0, 1.0);
-	return clamp(0.15 * min(1.0, value * 0.05), 0.0, 1.0);
+	return clamp(0.1 * min(1.0, value * 0.05), 0.0, 1.0);
 }
 
 void main(){
 	vec2 uv = gl_FragCoord.xy / resolution;
 
 	vec3 color = vec3(0.0);
-//	color = vec3(uv, 0.0);
 
-//	color = vec3(0.5 + 0.5 * sin(time), uv);
-//	color *= 0.25;
-
+/*
 	color.r += band(uv + vec2(0.1 * sin(time + 0.5), uv.y), -0.18, 0.25);
 	color.g += band(uv.yx, -0.15, 0.25);
 	color.b += band(vec2(uv.x, 1.0-uv.y), 0.1, 0.25);
 
-//	color.r += band(uv, -0.12, 0.25);
-//	color.g += band(uv, -0.12, 0.25);
 	color.b += band(uv.yx + vec2(0.1 * sin(time + 0.5), uv.y), -0.12, 0.25);
+*/
 
-	float value = RNoise3(vec3(uv * 1.5, 0.0), 4);
-	value = exp(value - 0.5) - 1.0;
-	vec3 v = clamp(color + value, vec3(0.0), vec3(1.0));
+	float value = 0.0;
+	int n = 4;
+	for(int i=0; i<n; i++){
+		vec3 pos = vec3(uv * 1.5, float(i - n / 2) * 0.1);
+		value += RNoise3(pos, 4);
+	}
+	value = exp((value - 0.75) * 1.0) - 1.0;
+	value *= 0.15;
+	vec3 v3 = effectColor * value;
 
+	vec3 v = clamp(color + v3, vec3(0.0), vec3(1.0));
 	color += v;
 
 	gl_FragColor = vec4(color, 1.0);

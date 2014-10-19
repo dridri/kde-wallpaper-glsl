@@ -11,6 +11,8 @@ GLWidget::GLWidget(QGLFormat glFormat, Wallpaper* parent)
 	: QGLWidget(glFormat, 0)
 	, m_initialized(false)
 	, m_parent(parent)
+	, m_shader(0)
+	, m_reloadShader(false)
 {
 //	setAutoBufferSwap(false);
 	setWindowFlags(Qt::Desktop | Qt::X11BypassWindowManagerHint);
@@ -21,6 +23,11 @@ GLWidget::GLWidget(QGLFormat glFormat, Wallpaper* parent)
 
 GLWidget::~GLWidget()
 {
+}
+
+void GLWidget::loadShader()
+{
+	m_reloadShader = true;
 }
 
 void GLWidget::initializeGL()
@@ -34,18 +41,27 @@ void GLWidget::initializeGL()
 		geCreateMainWindow("GE", m_parent->boundingRect().width(), m_parent->boundingRect().height(), 0);
 		resize(m_parent->boundingRect().width(), m_parent->boundingRect().height());
 		resizeGL(m_parent->boundingRect().width(), m_parent->boundingRect().height());
-
-//geFileFromBuffer(buff, sizeof(buff)+1)
-		m_shader = geCreateShader();
-		geShaderLoadVertexSource(m_shader, "/usr/share/kde4/services/glsl-wallpaper.vert");
-		geShaderLoadFragmentSource(m_shader, "/usr/share/kde4/services/glsl-wallpaper.frag");
-		m_shader->loc_time = geShaderUniformID(m_shader, "time");
-		loc_resolution = geShaderUniformID(m_shader, "resolution");
+		loadShader();
 	}
 }
 
 void GLWidget::paintGL()
 {
+	if(m_reloadShader)
+	{
+		m_reloadShader = false;
+		//geFileFromBuffer(buff, sizeof(buff)+1)
+		if(m_shader){
+			geFreeShader(m_shader);
+		}
+		m_shader = geCreateShader();
+		geShaderLoadVertexSource(m_shader, "/usr/share/kde4/services/glsl-wallpaper.vert");
+		geShaderLoadFragmentSource(m_shader, "/usr/share/kde4/services/glsl-wallpaper.frag");
+		m_shader->loc_time = geShaderUniformID(m_shader, "time");
+		loc_resolution = geShaderUniformID(m_shader, "resolution");
+		loc_effectColor = geShaderUniformID(m_shader, "effectColor");
+	}
+
 	if(geGetContext()->width != m_parent->boundingRect().width() || geGetContext()->height != m_parent->boundingRect().height())
 	{
 		resize(m_parent->boundingRect().width(), m_parent->boundingRect().height());
@@ -61,6 +77,7 @@ void GLWidget::paintGL()
 	geUpdateMatrix();
 	geShaderUniform1f(m_shader->loc_time, ((float)geGetTick()) / 1000.0f);
 	geShaderUniform2f(loc_resolution, (float)geGetContext()->width, (float)geGetContext()->height);
+	geShaderUniform3f(loc_effectColor, m_parent->effectColor().redF(), m_parent->effectColor().greenF(), m_parent->effectColor().blueF());
 	geFillRectScreen(0, 0, geGetContext()->width, geGetContext()->height, 0);
 //	geShaderUse(0);
 

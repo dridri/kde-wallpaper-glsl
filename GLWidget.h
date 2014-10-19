@@ -14,6 +14,9 @@ public:
 	GLWidget(QGLFormat glFormat, Wallpaper* parent = 0);
 	~GLWidget();
 
+public slots:
+	void loadShader();
+
 protected:
 	void initializeGL();
 	void paintGL();
@@ -26,9 +29,11 @@ private:
 	Wallpaper* m_parent;
 
 	ge_Shader* m_shader;
+	bool m_reloadShader;
 	u32 m_ticks;
 
 	int loc_resolution;
+	int loc_effectColor;
 };
 
 #endif //GL_WIDGET
