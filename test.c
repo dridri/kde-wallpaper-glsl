@@ -20,6 +20,7 @@ int main()
 	geDebugMode(GE_DEBUG_ALL);
 	geInit();
 	geCreateMainWindow("Wallpaper", 600, 480, GE_WINDOW_RESIZABLE);
+	u32 start_tick = geGetTick();
 
 	loadShader();
 
@@ -35,7 +36,7 @@ int main()
 
 		geClearScreen();
 		geShaderUse(m_shader);
-		geShaderUniform1f(m_shader->loc_time, ((float)geGetTick()) / 1000.0f);
+		geShaderUniform1f(m_shader->loc_time, ((float)(geGetTick() - start_tick)) / 1000.0f);
 		geShaderUniform2f(loc_resolution, geGetContext()->width, geGetContext()->height);
 		geUpdateMatrix();
 		geFillRectScreen(0, 0, geGetContext()->width, geGetContext()->height, 0xFFFFFFFF);

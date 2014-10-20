@@ -31,6 +31,7 @@ private:
 	ge_Shader* m_shader;
 	bool m_reloadShader;
 	u32 m_ticks;
+	u32 m_startTick;
 
 	int loc_resolution;
 	int loc_effectColor;

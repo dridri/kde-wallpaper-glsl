@@ -87,6 +87,7 @@ void main(){
 	int n = 4;
 	for(int i=0; i<n; i++){
 		vec3 pos = vec3(uv * 1.5, float(i - n / 2) * 0.1);
+		pos = vec3(uv, 0.0);
 		value += RNoise3(pos, 4);
 	}
 	value = exp((value - 0.75) * 1.0) - 1.0;

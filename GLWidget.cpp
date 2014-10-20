@@ -39,6 +39,7 @@ void GLWidget::initializeGL()
 		geDebugMode(GE_DEBUG_ALL);
 		geInit();
 		geCreateMainWindow("GE", m_parent->boundingRect().width(), m_parent->boundingRect().height(), 0);
+		m_startTick = geGetTick();
 		resize(m_parent->boundingRect().width(), m_parent->boundingRect().height());
 		resizeGL(m_parent->boundingRect().width(), m_parent->boundingRect().height());
 		loadShader();
@@ -75,7 +76,7 @@ void GLWidget::paintGL()
 
 	geShaderUse(m_shader);
 	geUpdateMatrix();
-	geShaderUniform1f(m_shader->loc_time, ((float)geGetTick()) / 1000.0f);
+	geShaderUniform1f(m_shader->loc_time, ((float)(geGetTick() - m_startTick)) / 1000.0f);
 	geShaderUniform2f(loc_resolution, (float)geGetContext()->width, (float)geGetContext()->height);
 	geShaderUniform3f(loc_effectColor, m_parent->effectColor().redF(), m_parent->effectColor().greenF(), m_parent->effectColor().blueF());
 	geFillRectScreen(0, 0, geGetContext()->width, geGetContext()->height, 0);
