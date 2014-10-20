@@ -9,8 +9,8 @@ void loadShader()
 		geFreeShader(m_shader);
 	}
 	m_shader = geCreateShader();
-	geShaderLoadVertexSource(m_shader, "drich-wallpaper.vert");
-	geShaderLoadFragmentSource(m_shader, "drich-wallpaper.frag");
+	geShaderLoadVertexSource(m_shader, "glsl-wallpaper.vert");
+	geShaderLoadFragmentSource(m_shader, "glsl-wallpaper.frag");
 	m_shader->loc_time = geShaderUniformID(m_shader, "time");
 	loc_resolution = geShaderUniformID(m_shader, "resolution");
 }

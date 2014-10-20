@@ -83,14 +83,6 @@ void main(){
 
 	vec3 color = vec3(0.0);
 
-/*
-	color.r += band(uv + vec2(0.1 * sin(time + 0.5), uv.y), -0.18, 0.25);
-	color.g += band(uv.yx, -0.15, 0.25);
-	color.b += band(vec2(uv.x, 1.0-uv.y), 0.1, 0.25);
-
-	color.b += band(uv.yx + vec2(0.1 * sin(time + 0.5), uv.y), -0.12, 0.25);
-*/
-
 	float value = 0.0;
 	int n = 4;
 	for(int i=0; i<n; i++){
@@ -99,7 +91,9 @@ void main(){
 	}
 	value = exp((value - 0.75) * 1.0) - 1.0;
 	value *= 0.15;
-	vec3 v3 = effectColor * value;
+	vec3 eColor = effectColor;
+	eColor = vec3(0.35, 0.5, 1.0);
+	vec3 v3 = eColor * value;
 
 	vec3 v = clamp(color + v3, vec3(0.0), vec3(1.0));
 	color += v;
